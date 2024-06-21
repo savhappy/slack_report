@@ -17,7 +17,7 @@ mix setup
 Setup Slack:
 
 Copy this invitation and join this test slack group to see it in action:
-  [slack_group]("https://join.slack.com/t/testslackapp-world/shared_invite/zt-2l0oz1ena-WfasXx1Vi8k_9g9H1HHL~w")
+  [slack_group](https://join.slack.com/t/testslackapp-world/shared_invite/zt-2l0oz1ena-WfasXx1Vi8k_9g9H1HHL~w)
 
 and subscribe to this channel:
 "daily_rev_reports"
@@ -33,7 +33,7 @@ See screenshot with results:
 
 ## **Notes**
 
-While this is very much a sample applicatoin, it mimics what a real SlackBot might provide for daily ecommerce reports
+While this is very much a sample application, it mimics what a real SlackBot might provide for daily ecommerce reports
 
 What I'm proud of:
 -The functionality is scalable and can the data layer can be easily swapped out with an external API call to Shopify.
