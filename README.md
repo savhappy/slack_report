@@ -29,7 +29,7 @@ After completing setup, you can start your application with: `iex -S mix` or `mi
 When the application is running you can navigate to the Slack team/channel provided.
 
 See screenshot with results:
-![alttext](assets/Screenshot 2024-06-21 at 2.29.38 PM.png)
+![alttext](https://github.com/savhappy/slack_report/blob/main/assets/Screenshot%202024-06-21%20at%202.29.38%E2%80%AFPM.png)
 
 ## **Notes**
 
