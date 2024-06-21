@@ -14,6 +14,8 @@ defmodule SlackReport.Application do
       {Phoenix.PubSub, name: SlackReport.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: SlackReport.Finch},
+      {SlackReport.ChildSupervisor, 1},
+      # {SlackReport.Worker, arg},
       # Start a worker by calling: SlackReport.Worker.start_link(arg)
       # {SlackReport.Worker, arg},
       # Start to serve requests, typically the last entry

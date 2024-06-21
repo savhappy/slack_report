@@ -1,11 +1,9 @@
-defmodule SlackReport.Days.Breakdown do
+defmodule SlackReport.Days.Body do
   alias SlackReport.Days
 
   # get transactions from  It will report metrics from the previous day, the day before the previous day, and the same day last week.
 
-  @set_date Application.compile_env(:slack_bot, :set_date) || ~D[2020-04-15]
-
-  def build_block(date \\ @set_date) do
+  def build_block(date) do
     txns = Days.fetch_all_by_date(date)
 
     %{
@@ -17,7 +15,7 @@ defmodule SlackReport.Days.Breakdown do
           type: "section",
           text: %{
             type: "mrkdwn",
-            text: "*Sales Breakdown (Top 3 by Revenue)*"
+            text: "*Sales Body (Top 3 by Revenue)*"
           }
         },
         %{
@@ -83,6 +81,40 @@ defmodule SlackReport.Days.Breakdown do
               text: "#{calculate_total(txns, :payment_gateway)}"
             }
           ]
+        },
+        %{
+          type: "divider"
+        },
+        %{
+          type: "actions",
+          elements: [
+            %{
+              type: "button",
+              text: %{
+                type: "plain_text",
+                text: ":hugging_face: Share Report",
+                emoji: true
+              },
+              value: "share_report",
+              action_id: "actionId-0"
+            }
+          ]
+        },
+        %{
+          type: "section",
+          text: %{
+            type: "mrkdwn",
+            text:
+              ":speaking_head_in_silhouette: <https://www.sourcemedium.com/contact|*Give Feedback*>"
+          }
+        },
+        %{
+          type: "section",
+          text: %{
+            type: "mrkdwn",
+            text:
+              ":mag_right: Learn more about at <https://apps.shopify.com/sourcemedium|*SourceMedium.com*>"
+          }
         }
       ]
     }
@@ -108,19 +140,12 @@ defmodule SlackReport.Days.Breakdown do
       end
       |> Map.new()
 
-    total =
-      Enum.reject(net_rev, fn {key, _} -> key == "" end)
-      |> Enum.sort_by(&elem(&1, 1), &>=/2)
-      |> Enum.take(3)
-      |> generate_text_field()
+    percent = calculate_percent(net_rev)
 
-    #   percent = calculate_percent(net_rev)
+    percentage = take_top_three(percent)
+    revenue = take_top_three(net_rev)
 
-    # total =
-    #   Enum.reject(percent, fn {key, _} -> key == "" end)
-    #   |> Enum.sort_by(&elem(&1, 1), &>=/2)
-    #   |> Enum.take(3)
-    #   |> generate_text_field()
+    combine(revenue, percentage) |> generate_text_field()
   end
 
   def calculate_percent(values) do
@@ -129,18 +154,24 @@ defmodule SlackReport.Days.Breakdown do
     values
     |> Enum.map(fn {key, value} ->
       percentage = value / total_sum * 100
-      {key, percentage}
+      {key, Float.round(percentage, 2)}
     end)
     |> Map.new()
   end
 
-  def generate_text_field(map) do
-    formatted_pairs =
-      Enum.map(map, fn {key, value} ->
-        "• #{key}: #{value}"
+  defp take_top_three(map) do
+    Enum.reject(map, fn {key, _} -> key == "" end)
+    |> Enum.sort_by(&elem(&1, 1), &>=/2)
+    |> Enum.take(3)
+  end
+
+  defp generate_text_field(combined_list) do
+    formatted_list =
+      Enum.map(combined_list, fn {key, value, percentage} ->
+        "• #{key}: #{value} (#{percentage}%)"
       end)
 
-    Enum.join(formatted_pairs, "\n")
+    Enum.join(formatted_list, "\n")
   end
 
   defp is_whole_num(value) do
@@ -155,5 +186,13 @@ defmodule SlackReport.Days.Breakdown do
       |> Enum.at(0)
       |> String.to_integer()
     end
+  end
+
+  defp combine(list1, list2) do
+    map2 = Map.new(list2, & &1)
+
+    Enum.map(list1, fn {key, value1} ->
+      {key, value1, Map.get(map2, key)}
+    end)
   end
 end

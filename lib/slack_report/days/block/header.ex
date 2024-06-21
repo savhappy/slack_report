@@ -92,7 +92,7 @@ defmodule SlackReport.Days.Header do
         type: "section",
         text: %{
           type: "mrkdwn",
-          text: "*Sales Breakdown (Top 3 by Revenue)*"
+          text: "*Sales Body (Top 3 by Revenue)*"
         }
       }
     ]
