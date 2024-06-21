@@ -1,5 +1,7 @@
 # SlackReport
 
+Welcome to my test project for Source Medium! I hope you enjoy playing with this project as much as I enjoyed creating it!
+
 ## **Getting Started**
 
 ### Install
@@ -8,7 +10,7 @@
 git clone https://github.com/savhappy/slack_report.git
 ```
 
-cd into slack_report and setuo:
+cd into slack_report and setup:
 
 ```elixir
 mix setup
