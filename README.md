@@ -38,12 +38,14 @@ See screenshot with results:
 While this is very much a sample application, it mimics what a real SlackBot might provide for daily ecommerce reports
 
 What I'm proud of:
--The functionality is scalable and can the data layer can be easily swapped out with an external API call to Shopify.
--Post to a real Slack group.
--Supervisor. I chose to start the process under a Supervision tree to allow extensibility for more reports.
--Polling Genserver to address time intervals.
+
+- The functionality is scalable and can the data layer can be easily swapped out with an external API call to Shopify.
+- Post to a real Slack group.
+- Supervisor. I chose to start the process under a Supervision tree to allow extensibility for more reports.
+- Polling Genserver to address time intervals.
 
 Things I would add:
+
 - Testing. This project was exciting but for timesake I've decided to present without tests additional tests. Before shipping to prod, extensive test should be added into the context and genserver.
 - A very small amount of the formatting on the notification itself is off.
 - Add a functioning `Share` button.
