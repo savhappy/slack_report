@@ -2,12 +2,13 @@ defmodule SlackReport.Scheduler do
   @moduledoc """
   GenServer for scheduling daily reports
   """
-  use GenServer
 
   @doc """
   This GenServer is responsible for sending a daily report based on when the GenServer is initialized.
   Currently we are passing in a default date/channel to send_daily_reports .
   """
+  use GenServer
+
   def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end

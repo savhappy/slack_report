@@ -1,18 +1,53 @@
 # SlackReport
 
-To start your Phoenix server:
+## **Getting Started**
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+### Install
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+```bash
+git clone https://github.com/savhappy/slack_report.git
+```
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+cd into slack_report and setuo:
 
-## Learn more
+```elixir
+mix setup
+```
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Setup Slack:
+
+Copy this invitation and join this test slack group to see it in action:
+  [slack_group]("https://join.slack.com/t/testslackapp-world/shared_invite/zt-2l0oz1ena-WfasXx1Vi8k_9g9H1HHL~w")
+
+and subscribe to this channel:
+"daily_rev_reports"
+
+After completing setup, you can start your application with: `iex -S mix` or `mix phx.server`
+
+## **The Application**
+
+When the application is running you can navigate to the Slack team/channel provided.
+
+See screenshot with results:
+![alttext](assets/Screenshot 2024-06-21 at 2.29.38 PM.png)
+
+## **Notes**
+
+While this is very much a sample applicatoin, it mimics what a real SlackBot might provide for daily ecommerce reports
+
+What I'm proud of:
+-The functionality is scalable and can the data layer can be easily swapped out with an external API call to Shopify.
+-Post to a real Slack group.
+-Supervisor. I chose to start the process under a Supervision tree to allow extensibility for more reports.
+-Polling Genserver to address time intervals.
+
+Things I would add:
+- Testing. This project was exciting but for timesake I've decided to present without tests additional tests. Before shipping to prod, extensive test should be added into the context and genserver.
+- A very small amount of the formatting on the notification itself is off.
+- Add a functioning `Share` button.
+- The current GenServer is quite simple and doesn't efficiently handle any asynchronous tasks. This could be an issue for larger sets of data. 
+- Create another table to access previpous report highlights. 
+
+## Contact Me
+
+If you have any additional questions, send an email to [Savannah Manning](mailto:sm05908@gmail.com@gmail.com).
