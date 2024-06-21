@@ -52,6 +52,7 @@ if config_env() == :prod do
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :slack_report, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
+  config :slack_report, slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL")
 
   config :slack_report, SlackReportWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],

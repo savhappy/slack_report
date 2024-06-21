@@ -57,7 +57,11 @@ defmodule SlackReport.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:tesla, "~> 1.9"},
+      {:hackney, "~> 1.20"},
+      {:nimble_csv, "~> 1.1"},
+      {:timex, "~> 3.7.11"}
     ]
   end
 

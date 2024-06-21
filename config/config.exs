@@ -11,6 +11,9 @@ config :slack_report,
   ecto_repos: [SlackReport.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :slack_report, slack_webhook_url: System.get_env("SLACK_WEBHOOK_URL")
+config :slack_report, set_date: System.get_env("SET_DATE")
+
 # Configures the endpoint
 config :slack_report, SlackReportWeb.Endpoint,
   url: [host: "localhost"],
