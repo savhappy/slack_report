@@ -76,11 +76,10 @@ defmodule SlackReport.MixProject do
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "ecto.test_reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
       test: [
-        "ecto.drop",
         "ecto.create --quiet",
         "ecto.migrate --quiet",
-        "run priv/repo/seeds.exs",
         "test"
       ],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
