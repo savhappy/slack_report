@@ -15,7 +15,7 @@ defmodule SlackReport.Days do
   """
 
   @slack_webhook_url Application.compile_env(:slack_bot, :slack_webhook_url) ||
-                       "https://hooks.slack.com/services/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"
+                       "https://hooks.slack.com/services/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"
   @set_date Application.compile_env(:slack_bot, :set_date) || ~D[2020-04-15]
 
   def send_daily_report(date \\ @set_date, channel \\ "daily_rev_reports") do
