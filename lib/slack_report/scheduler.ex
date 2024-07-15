@@ -19,17 +19,17 @@ defmodule SlackReport.Scheduler do
   end
 
   def handle_continue(:load_data, _state) do
-    {:noreply, SlackReport.Days.send_daily_report()}
+    {:noreply, SlackReport.send_daily_report()}
   end
 
   def handle_info(:schedule_report) do
     Process.send_after(self(), :update_time, 1000 * 60 * 60 * 24)
-    {:noreply, SlackReport.Days.send_daily_report()}
+    {:noreply, SlackReport.send_daily_report()}
   end
 
   def handle_info(:update_time) do
     Process.send_after(self(), :update_time, 1000 * 60 * 60 * 24)
-    {:noreply, SlackReport.Days.send_daily_report()}
+    {:noreply, SlackReport.send_daily_report()}
   end
 
   def calculate_time() do

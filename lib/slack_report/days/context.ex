@@ -1,39 +1,10 @@
 defmodule SlackReport.Days do
   @moduledoc """
-  API for Daily Reports.
+  Business context for day reports.
   """
-  alias SlackReport.Days.Body
-  alias SlackReport.Days.Header
   alias SlackReport.Repo
 
   import Ecto.Query
-
-  @doc """
-  Currently, this is attached to a real slack group:
-  "https://join.slack.com/t/testslackapp-world/shared_invite/zt-2l0oz1ena-WfasXx1Vi8k_9g9H1HHL~w"
-  copy this link to join the public slack and subscribe to the "daily_rev_reports" channel
-  """
-
-  @slack_webhook_url Application.compile_env(:slack_bot, :slack_webhook_url) ||
-                       "https://hooks.slack.com/services/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"
-  @set_date Application.compile_env(:slack_bot, :set_date) || ~D[2020-04-15]
-
-  def send_daily_report(date \\ @set_date, channel \\ "daily_rev_reports") do
-    blocks = List.flatten([Header.build_block(date), Body.build_block(date)])
-
-    Tesla.post!(
-      @slack_webhook_url,
-      %{
-        channel: "##{channel}",
-        username: "Jump",
-        icon_emoji: ":desktop_computer:"
-      }
-      |> Map.merge(%{
-        blocks: blocks
-      })
-      |> Jason.encode!()
-    )
-  end
 
   @doc """
   Returns list of of all transactions from database that match given order date.
@@ -50,5 +21,91 @@ defmodule SlackReport.Days do
           d.order_date == ^off_by_eight
     )
     |> Repo.all()
+  end
+
+  @doc """
+  'calculate_total' aggregates the fetehd transactions get transactions from the previous day, the day before the previous day, and the same day last week.
+  It calculates the total revenue based on the field we are looking at and rejects any results that have no value attached.
+
+  ex.   %{
+      "customer_id" => "6106765328560",
+      "discount_codes" => "", <- this value that is grouped will not be included in top threee
+      "discounts" => "0",
+      "gross_revenue" => "49.99",
+      "order_date" => "43936",
+      "order_id" => "4423220461744",
+      "order_type" => "non_subscription",
+      "payment_gateway" => "shopify_payments",
+      "source_medium" => "paid_fb / cpc"
+    }
+
+  """
+  def calculate_total(txns, type) do
+    grouped_txns =
+      Enum.group_by(txns, fn txn ->
+        Map.get(txn, type)
+      end)
+
+    net_rev = calculate_net_rev(grouped_txns)
+    percent = calculate_percent(net_rev)
+
+    percentage = take_top_three(percent)
+    revenue = take_top_three(net_rev)
+
+    combine(revenue, percentage)
+  end
+
+  def calculate_net_rev(txns) do
+    for {order_type, report_list} <- txns do
+      total_revenue =
+        report_list
+        |> Enum.reduce(0.0, fn report, acc ->
+          revenue = is_whole_num(report.gross_revenue)
+          discount = is_whole_num(report.discounts)
+          acc + revenue - discount
+        end)
+
+      {order_type, Float.round(total_revenue, 2)}
+    end
+    |> Map.new()
+  end
+
+  def calculate_percent(values) do
+    total_sum = Map.values(values) |> Enum.sum()
+
+    values
+    |> Enum.map(fn {key, value} ->
+      percentage = value / total_sum * 100
+      {key, Float.round(percentage, 2)}
+    end)
+    |> Map.new()
+  end
+
+  defp take_top_three(map) do
+    Enum.reject(map, fn {key, _} -> key == "" end)
+    |> Enum.sort_by(&elem(&1, 1), &>=/2)
+    |> Enum.take(3)
+  end
+
+  defp is_whole_num(value) do
+    if String.contains?(value, ".") do
+      value
+      |> String.split(" ")
+      |> Enum.at(0)
+      |> String.to_float()
+    else
+      value
+      |> String.split(" ")
+      |> Enum.at(0)
+      |> String.to_integer()
+    end
+  end
+
+  defp combine(list1, list2) do
+    map2 = Map.new(list2, & &1)
+
+    Enum.map(list1, fn {key, value1} ->
+      {key, value1, Map.get(map2, key)}
+    end)
   end
 end
