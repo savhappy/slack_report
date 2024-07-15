@@ -47,7 +47,7 @@ defmodule SlackReport.DaysTest do
                Days.calculate_net_rev(grouped_txns)
     end
 
-    test "calculate_percent/1 - calculates the net rev and subtracts discounts" do
+    test "calculate_percent/1 - calculates the percentage" do
       values = %{"non_subscription" => 49.98, "subscription" => 29.99}
 
       assert Days.calculate_percent(values) == %{
